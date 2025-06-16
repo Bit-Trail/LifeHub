@@ -1,22 +1,28 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-export default function Home() {
+
+export default function LandingPage() {
   return (
-    <div className="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
-      <img
-        className="size-12 shrink-0"
-        src="/img/logo.svg"
-        alt="ChitChat Logo"
-      />
-      <div>
-        <div className="text-xl font-medium text-black dark:text-white">
-          ChitChat
-        </div>
-        <p className="text-gray-500 dark:text-gray-400">
-          You have a new message!
-        </p>
-        <div>
-          <Button>Text Him</Button>
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center text-center text-white bg-gradient-to-br from-[#0f0f0f] via-[#1a1a1a] to-[#0f0f0f] px-4">
+      <h1 className="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-purple-500 to-cyan-400 text-transparent bg-clip-text mb-6 animate-fade-in">
+        LifeHub
+      </h1>
+      <p className="text-gray-400 text-lg max-w-xl mb-10">
+        Your all-in-one daily discipline dashboard — track tasks, habits, mood,
+        goals, and more.
+      </p>
+      <div className="flex gap-4">
+        <Link href="/login">
+          <Button className="bg-purple-600 hover:bg-purple-700">Login</Button>
+        </Link>
+        <Link href="/register">
+          <Button
+            variant="outline"
+            className="border-cyan-400 text-cyan-400 hover:bg-cyan-900/10"
+          >
+            Register
+          </Button>
+        </Link>
       </div>
     </div>
   );

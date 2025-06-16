@@ -15,6 +15,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <a href="/dashboard/habits" className="block">
             Habits
           </a>
+          <a href="/dashboard/journal" className="block">
+            Journal
+          </a>
+          <a href="/dashboard/goals" className="block">
+            Goals
+          </a>
+          <a href="/dashboard/analytics" className="block">
+            Analytics
+          </a>
         </nav>
       </aside>
       <main className="flex-1 bg-gray-100 p-6">{children}</main>

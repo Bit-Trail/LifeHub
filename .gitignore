@@ -1,0 +1,13 @@
+# Ignore node_modules from both subfolders
+lifehub-fe/node_modules/
+lifehub-be/node_modules/
+
+# Ignore build output
+lifehub-fe/.next/
+lifehub-be/dist/
+
+# Ignore logs
+**/*.log
+
+# Ignore env files
+**/.env
