@@ -1,339 +1,401 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, ChevronRight, Plus } from "lucide-react";
+"use client";
 
-export default function Dashboard() {
+import { useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  CheckCircle,
+  Target,
+  BookOpen,
+  BarChart3,
+  Sparkles,
+  ArrowRight,
+  Play,
+  Users,
+  Clock,
+  Award,
+} from "lucide-react";
+
+export default function LifeHubLanding() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 300], [0, -50]);
+  const y2 = useTransform(scrollY, [0, 300], [0, -100]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: { clientX: any; clientY: any }) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  const features = [
+    {
+      icon: CheckCircle,
+      title: "Smart Tasks",
+      desc: "AI-powered task management",
+    },
+    {
+      icon: Target,
+      title: "Goal Tracking",
+      desc: "Achieve your dreams systematically",
+    },
+    { icon: BookOpen, title: "Daily Journals", desc: "Reflect and grow daily" },
+    {
+      icon: BarChart3,
+      title: "Analytics",
+      desc: "Track your progress visually",
+    },
+  ];
+
+  const stats = [
+    { icon: Users, value: "50K+", label: "Active Users" },
+    { icon: Clock, value: "2M+", label: "Tasks Completed" },
+    { icon: Award, value: "98%", label: "Success Rate" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-purple-100 p-6">
-      <div className="mx-auto max-w-7xl">
-        {/* Main Dashboard Card */}
-        <Card className="overflow-hidden shadow-2xl">
-          <CardContent className="p-0">
-            {/* Header */}
-            <div className="flex items-center justify-between border-b bg-white px-6 py-4">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Dashboard
-                </h1>
-              </div>
-
-              {/* Navigation */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="default"
-                  className="rounded-full bg-gray-800 hover:bg-gray-700"
-                >
-                  Dashboard
-                </Button>
-                <Button variant="ghost" className="text-gray-600">
-                  Tasks
-                </Button>
-                <Button variant="ghost" className="text-gray-600">
-                  Calendar
-                </Button>
-                <Button variant="ghost" className="text-gray-600">
-                  Reports
-                </Button>
-              </div>
-
-              {/* User Profile */}
-              <div className="flex items-center gap-2 rounded-full bg-gray-800 px-4 py-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src="/placeholder.svg?height=24&width=24" />
-                  <AvatarFallback className="text-xs">NT</AvatarFallback>
-                </Avatar>
-                <span className="text-sm text-white">NiToyandug</span>
-              </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="grid grid-cols-12 gap-6 p-6">
-              {/* Left Sidebar */}
-              <div className="col-span-3 space-y-4">
-                {/* Task Status */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between rounded-lg bg-blue-50 p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500">
-                        <Check className="h-4 w-4 text-white" />
-                      </div>
-                      <span className="font-medium text-gray-700">
-                        Complete
-                      </span>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg bg-teal-50 p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-500">
-                        <Check className="h-4 w-4 text-white" />
-                      </div>
-                      <span className="font-medium text-gray-700">
-                        In progress
-                      </span>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg bg-purple-50 p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-6 w-6 rounded-full bg-purple-500"></div>
-                      <span className="font-medium text-gray-700">To Do</span>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg bg-teal-50 p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-500">
-                        <Check className="h-4 w-4 text-white" />
-                      </div>
-                      <span className="font-medium text-gray-700">To Do</span>
-                    </div>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  </div>
-
-                  <div className="flex items-center justify-between p-3">
-                    <span className="text-sm font-medium text-purple-600">
-                      60%
-                    </span>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  </div>
-                </div>
-
-                {/* Calendar Widget */}
-                <Card className="mt-6">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src="/placeholder.svg?height=24&width=24" />
-                          <AvatarFallback className="text-xs">E</AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium">Evclorets</span>
-                      </div>
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="grid grid-cols-7 gap-1 text-xs">
-                      <div className="text-center text-gray-500 p-1">MO</div>
-                      <div className="text-center text-gray-500 p-1">TU</div>
-                      <div className="text-center text-gray-500 p-1">WE</div>
-                      <div className="text-center text-gray-500 p-1">TH</div>
-                      <div className="text-center text-gray-500 p-1">FR</div>
-                      <div className="text-center text-gray-500 p-1">SA</div>
-                      <div className="text-center text-gray-500 p-1">SU</div>
-
-                      {/* Calendar Days */}
-                      {Array.from({ length: 35 }, (_, i) => {
-                        const day = i - 6;
-                        const isHighlighted = day === 20 || day === 30;
-                        const isCurrentMonth = day > 0 && day <= 31;
-
-                        return (
-                          <div
-                            key={i}
-                            className={`text-center p-1 text-xs ${
-                              isHighlighted
-                                ? "bg-teal-500 text-white rounded"
-                                : isCurrentMonth
-                                ? "text-gray-700"
-                                : "text-gray-300"
-                            }`}
-                          >
-                            {isCurrentMonth ? day : ""}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Main Charts Area */}
-              <div className="col-span-9 space-y-6">
-                {/* Project Completion Chart */}
-                <Card className="bg-gradient-to-br from-purple-600 to-teal-500 text-white">
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-white">
-                      Project completion
-                    </CardTitle>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-white/20 bg-white/10 text-white hover:bg-white/20"
-                    >
-                      REPORT
-                    </Button>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="relative h-64">
-                      {/* Chart Background Grid */}
-                      <div className="absolute inset-0 opacity-20">
-                        <svg className="h-full w-full">
-                          <defs>
-                            <pattern
-                              id="grid"
-                              width="40"
-                              height="40"
-                              patternUnits="userSpaceOnUse"
-                            >
-                              <path
-                                d="M 40 0 L 0 0 0 40"
-                                fill="none"
-                                stroke="white"
-                                strokeWidth="1"
-                              />
-                            </pattern>
-                          </defs>
-                          <rect width="100%" height="100%" fill="url(#grid)" />
-                        </svg>
-                      </div>
-
-                      {/* Y-axis labels */}
-                      <div className="absolute left-0 top-0 flex h-full flex-col justify-between text-xs">
-                        <span>11101</span>
-                        <span>9300</span>
-                        <span>8500</span>
-                        <span>7500</span>
-                        <span>6745</span>
-                      </div>
-
-                      {/* Chart Area */}
-                      <div className="ml-12 h-full">
-                        <svg className="h-full w-full">
-                          <defs>
-                            <linearGradient
-                              id="chartGradient"
-                              x1="0%"
-                              y1="0%"
-                              x2="0%"
-                              y2="100%"
-                            >
-                              <stop
-                                offset="0%"
-                                stopColor="rgba(255,255,255,0.3)"
-                              />
-                              <stop
-                                offset="100%"
-                                stopColor="rgba(255,255,255,0.05)"
-                              />
-                            </linearGradient>
-                          </defs>
-                          <path
-                            d="M 0 180 Q 100 160 200 140 T 400 120 T 600 100 L 600 240 L 0 240 Z"
-                            fill="url(#chartGradient)"
-                            stroke="rgba(255,255,255,0.8)"
-                            strokeWidth="2"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Bottom Charts */}
-                <div className="grid grid-cols-2 gap-6">
-                  {/* Task Performance Chart */}
-                  <Card className="bg-gray-800 text-white">
-                    <CardHeader>
-                      <CardTitle className="text-white">
-                        Task performance over time
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="relative h-32">
-                        <svg className="h-full w-full">
-                          <path
-                            d="M 0 80 Q 50 60 100 70 T 200 65 T 300 60"
-                            fill="none"
-                            stroke="#8b5cf6"
-                            strokeWidth="2"
-                          />
-                          <path
-                            d="M 0 100 Q 50 90 100 85 T 200 80 T 300 75"
-                            fill="none"
-                            stroke="#06b6d4"
-                            strokeWidth="2"
-                          />
-                          <circle cx="250" cy="65" r="4" fill="white" />
-                          <circle cx="280" cy="75" r="3" fill="#10b981" />
-                        </svg>
-
-                        {/* Y-axis labels */}
-                        <div className="absolute left-0 top-0 flex h-full flex-col justify-between text-xs opacity-60">
-                          <span>514</span>
-                          <span>501</span>
-                          <span>502</span>
-                          <span>855</span>
-                          <span>101</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Resource Allocation Chart */}
-                  <Card className="bg-gray-800 text-white">
-                    <CardHeader>
-                      <CardTitle className="text-white">
-                        Resource allocation
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex items-center justify-center">
-                      <div className="relative h-32 w-32">
-                        <svg className="h-full w-full" viewBox="0 0 100 100">
-                          <circle
-                            cx="50"
-                            cy="50"
-                            r="40"
-                            fill="none"
-                            stroke="#10b981"
-                            strokeWidth="20"
-                            strokeDasharray="75 25"
-                            strokeDashoffset="0"
-                            transform="rotate(-90 50 50)"
-                          />
-                          <circle
-                            cx="50"
-                            cy="50"
-                            r="40"
-                            fill="none"
-                            stroke="#8b5cf6"
-                            strokeWidth="20"
-                            strokeDasharray="50 50"
-                            strokeDashoffset="-75"
-                            transform="rotate(-90 50 50)"
-                          />
-                          <circle
-                            cx="50"
-                            cy="50"
-                            r="40"
-                            fill="none"
-                            stroke="#6366f1"
-                            strokeWidth="20"
-                            strokeDasharray="25 75"
-                            strokeDashoffset="-125"
-                            transform="rotate(-90 50 50)"
-                          />
-                        </svg>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div
+          className="absolute w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"
+          style={{
+            left: `${mousePosition.x * 0.02}px`,
+            top: `${mousePosition.y * 0.02}px`,
+          }}
+        />
+        <div
+          className="absolute w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"
+          style={{
+            right: `${mousePosition.x * 0.01}px`,
+            bottom: `${mousePosition.y * 0.01}px`,
+          }}
+        />
+        <div className="absolute w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
       </div>
+
+      {/* Navigation */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="relative z-50 p-6"
+      >
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <motion.div
+            className="text-2xl font-bold text-white"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Sparkles className="inline mr-2 text-purple-400" />
+            LifeHub
+          </motion.div>
+          <div className="flex gap-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2 text-white border border-purple-400 rounded-full hover:bg-purple-400/20 transition-all duration-300"
+            >
+              Login
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-purple-500/25 transition-all duration-300"
+            >
+              Get Started
+            </motion.button>
+          </div>
+        </div>
+      </motion.nav>
+
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+          {/* Left Content */}
+          <motion.div style={{ y: y1 }} className="space-y-8 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-full text-purple-300 text-sm mb-6"
+              >
+                <Sparkles className="w-4 h-4" />
+                Transform Your Life Today
+              </motion.div>
+
+              <h1 className="text-6xl lg:text-7xl font-black text-white leading-tight">
+                Master Your
+                <motion.span
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600 block"
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  Life Journey
+                </motion.span>
+              </h1>
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-xl text-gray-300 leading-relaxed max-w-lg"
+            >
+              The ultimate productivity platform that combines task management,
+              habit tracking, goal setting, and personal analytics in one
+              beautiful, intelligent experience.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(168, 85, 247, 0.4)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                onHoverStart={() => setIsHovered(true)}
+                onHoverEnd={() => setIsHovered(false)}
+                className="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-semibold shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 flex items-center gap-3"
+              >
+                <Play className="w-5 h-5" />
+                Start Your Journey
+                <motion.div
+                  animate={{ x: isHovered ? 5 : 0 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </motion.div>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300"
+              >
+                Watch Demo
+              </motion.button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+              className="flex flex-wrap gap-6 pt-8"
+            >
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.8 + index * 0.1 }}
+                  className="flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-xl border border-white/20"
+                >
+                  <div className="p-2 bg-purple-500/20 rounded-lg">
+                    <stat.icon className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-white">
+                      {stat.value}
+                    </div>
+                    <div className="text-sm text-gray-400">{stat.label}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right Dashboard Preview */}
+          <motion.div style={{ y: y2 }} className="relative">
+            <DashboardPreview />
+          </motion.div>
+        </div>
+
+        {/* Features Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mt-32 text-center"
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Everything You Need to
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+              {" "}
+              Succeed
+            </span>
+          </h2>
+          <p className="text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
+            Powerful features designed to help you build better habits, achieve
+            your goals, and live your best life.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05, y: -10 }}
+                viewport={{ once: true }}
+                className="group p-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl hover:bg-white/20 transition-all duration-300 cursor-pointer"
+              >
+                <div className="p-3 bg-purple-500/20 rounded-xl w-fit mx-auto mb-4 group-hover:bg-purple-500/30 transition-colors">
+                  <feature.icon className="w-8 h-8 text-purple-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-400">{feature.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+function DashboardPreview() {
+  const [activeCard, setActiveCard] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveCard((prev) => (prev + 1) % 3);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const cards = [
+    {
+      title: "Today's Focus",
+      content: "Complete project presentation",
+      color: "from-purple-600 to-purple-800",
+      progress: 75,
+    },
+    {
+      title: "Habit Streak",
+      content: "Morning workout - 12 days",
+      color: "from-pink-600 to-pink-800",
+      progress: 85,
+    },
+    {
+      title: "Weekly Goal",
+      content: "Read 3 books this month",
+      color: "from-blue-600 to-blue-800",
+      progress: 60,
+    },
+  ];
+
+  return (
+    <div className="relative">
+      {/* Main Dashboard Card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
+        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        className="relative z-10 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-2xl font-bold text-white">Dashboard</h3>
+          <div className="flex gap-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {cards.map((card, index) => (
+            <motion.div
+              key={card.title}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.7 + index * 0.1 }}
+              className={`p-4 rounded-2xl bg-gradient-to-r ${card.color} ${
+                activeCard === index
+                  ? "scale-105 shadow-lg"
+                  : "scale-100 opacity-70"
+              } transition-all duration-500 cursor-pointer`}
+              onClick={() => setActiveCard(index)}
+            >
+              <h4 className="text-white font-semibold mb-2">{card.title}</h4>
+              <p className="text-white/80 text-sm mb-3">{card.content}</p>
+              <div className="w-full bg-white/20 rounded-full h-2">
+                <motion.div
+                  className="h-2 bg-white rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${card.progress}%` }}
+                  transition={{ delay: 1 + index * 0.1, duration: 1 }}
+                />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Floating Analytics */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+          className="absolute -top-4 -right-4 bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-2xl shadow-xl"
+        >
+          <BarChart3 className="w-6 h-6 text-white" />
+        </motion.div>
+      </motion.div>
+
+      {/* Floating Cards */}
+      <motion.div
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        className="absolute -top-8 -left-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 shadow-xl"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+            <CheckCircle className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="text-white font-semibold">Task Complete!</div>
+            <div className="text-gray-400 text-sm">+50 XP earned</div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1.3, duration: 0.8 }}
+        className="absolute -bottom-8 -right-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 shadow-xl"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+            <Target className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="text-white font-semibold">Goal Progress</div>
+            <div className="text-gray-400 text-sm">67% this week</div>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

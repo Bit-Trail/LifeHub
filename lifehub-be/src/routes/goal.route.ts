@@ -1,4 +1,3 @@
-// goal.route.ts
 import express, { RequestHandler } from "express";
 import {
   createGoal,

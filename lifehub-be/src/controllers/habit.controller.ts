@@ -46,28 +46,33 @@ export const getHabits = async (req: AuthRequest, res: Response): Promise<void> 
 };
 
 // ✅ Toggle habit completion
-export const toggleHabit = async (req: AuthRequest, res: Response): Promise<void> => {
-  const userId = req.user?.userId;
+export const toggleHabitDay = async (req: Request, res: Response)=> {
+  const userId = (req as any).user.userId;
   const habitId = parseInt(req.params.id);
+  const day = req.params.day; // Mon, Tue, etc.
 
-  const habit = await prisma.habit.findUnique({ where: { id: habitId } });
+  try {
+    const habit = await prisma.habit.findUnique({ where: { id: habitId } });
 
-  if (!habit) {
-    res.status(404).json({ error: "Habit not found" });
+    if (!habit || habit.userId !== userId) {
+      return res.status(403).json({ error: "Unauthorized or not found" });
+    }
+
+    const current = (habit.tracked ?? {}) as Record<string, boolean>;
+    const updated = { ...current, [day]: !current[day] };
+
+    await prisma.habit.update({
+      where: { id: habitId },
+      data: { tracked: updated }, // Change 'tracked' to the correct field name if different
+    });
+
+    res.json({ success: true, tracked: updated });
+    return;
+  } catch (err) {
+    console.error("Toggle day failed:", err);
+    res.status(500).json({ error: "Failed to toggle habit day" });
     return;
   }
-
-  if (habit.userId !== userId) {
-    res.status(403).json({ error: "Not authorized" });
-    return;
-  }
-
-  const updated = await prisma.habit.update({
-    where: { id: habitId },
-    data: { completed: !habit.completed },
-  });
-
-  res.json(updated);
 };
 
 // ❌ Delete a habit

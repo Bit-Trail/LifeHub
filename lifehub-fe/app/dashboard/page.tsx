@@ -1,8 +1,11 @@
+import { SectionCards } from "@/components/ui/SectionCards";
+import { ChartAreaInteractive } from "@/components/ui/chart-area-interactive";
+
 export default function DashboardPage() {
   return (
-    <div>
-      <h2 className="text-3xl font-bold mb-4">Welcome back 👋</h2>
-      <p>Your discipline dashboard starts here.</p>
+    <div className="flex flex-col gap-4 p-4 md:p-6">
+      <SectionCards />
+      <ChartAreaInteractive />
     </div>
   );
 }

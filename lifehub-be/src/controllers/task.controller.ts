@@ -17,7 +17,7 @@ export const getTasks = async (req: Request, res: Response) => {
 
 export const createTask = async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
-  const { title } = req.body;
+  const { title, date } = req.body;
 
   try {
     const task = await prisma.task.create({

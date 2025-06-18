@@ -22,6 +22,7 @@ model User {
 model Task {
   id        Int      @id @default(autoincrement())
   title     String
+  date      DateTime @default(now())
   completed Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
@@ -33,6 +34,7 @@ model Habit {
   title     String
   frequency String   // e.g. "daily", "weekly"
   completed Boolean  @default(false)
+  tracked Json @default("{}")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   createdAt DateTime @default(now())
@@ -51,11 +53,12 @@ model Journal {
 model Goal {
   id          Int      @id @default(autoincrement())
   title       String
-  description String?
-  status      String?     // optional: "in-progress", "completed", etc.
+  description String?  // optional - good ✅
+  status      String   @default("Not Started") // ✅ added default
   targetDate  DateTime
   createdAt   DateTime @default(now())
 
   userId Int
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+

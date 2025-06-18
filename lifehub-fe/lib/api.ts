@@ -1,4 +1,6 @@
 import { getAuthToken } from "./utils";
+import { Habit, Journal, Task, Goal } from "@/types";
+
 
 const BASE_URL = "http://localhost:3030/api";
 
@@ -50,72 +52,137 @@ export const register = (data: {
 //
 // ✅ TASKS
 //
-export const getTasks = () => api("/tasks");
-export const createTask = (data: { title: string }) =>
-  api("/tasks", {
-    method: "POST",
-    body: JSON.stringify(data),
+export async function getTasks(): Promise<Task[]> {
+  const res = await fetch("http://localhost:3030/api/tasks", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
   });
-export const toggleTask = (id: number) =>
-  api(`/tasks/${id}/toggle`, { method: "PATCH" });
-export const deleteTask = (id: number) =>
-  api(`/tasks/${id}`, { method: "DELETE" });
+  const data = await res.json();
+  return data;
+}
+
+export async function createTask(data: { title: string, date: string }) {
+  await fetch("http://localhost:3030/api/tasks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+    body: JSON.stringify({ ...data, date: new Date().toISOString() }), // ✅ add date
+  });
+}
+
+export async function deleteTask(id: number) {
+  await fetch(`http://localhost:3030/api/tasks/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    }
+  });
+}
+
+export async function toggleTaskDone(id: number) {
+  await fetch(`http://localhost:3030/api/tasks/${id}/toggle`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    }
+  });
+}
 
 //
 // ✅ HABITS
 //
-export const getHabits = () => api("/habits");
-export const createHabit = (data: { title: string; frequency: string }) =>
-  api("/habits", {
+export async function getHabits(): Promise<Habit[]> {
+  const res = await fetch("http://localhost:3030/api/habits", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+  });
+  return res.json();
+}
+
+// ✅ Create habit
+export async function createHabit(data: { title: string; emoji: string, frequency: string }) {
+  await fetch("http://localhost:3030/api/habits", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
     body: JSON.stringify(data),
   });
-export const toggleHabit = (id: number) =>
-  api(`/habits/${id}/toggle`, { method: "PATCH" });
-export const deleteHabit = (id: number) =>
-  api(`/habits/${id}`, { method: "DELETE" });
+}
+
+// ✅ Toggle a habit day
+export async function toggleHabitDay(id: number, day: string) {
+  await fetch(`http://localhost:3030/api/habits/${id}/toggle/${day}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+  });
+}
+
 
 //
 // ✅ JOURNALS
 //
-export const getJournals = () => api("/journals");
-export const createJournal = (data: {
-  title: string;
-  content: string;
-  mood?: string;
-}) =>
-  api("/journals", {
+export async function getJournals(): Promise<Journal[]> {
+  const res = await fetch("http://localhost:3030/api/journals", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+  });
+  return res.json();
+}
+
+export async function createJournal(data: { content: string }) {
+  await fetch("http://localhost:3030/api/journals", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
     body: JSON.stringify(data),
   });
-export const deleteJournal = (id: number) =>
-  api(`/journals/${id}`, { method: "DELETE" });
+}
 
 //
 // ✅ GOALS
 //
-export const getGoals = () => api("/goals");
-export const createGoal = (data: {
+export async function getGoals(): Promise<Goal[]> {
+  const res = await fetch("http://localhost:3030/api/goals", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+  });
+  return res.json();
+}
+
+export async function createGoal(data: {
   title: string;
   description?: string;
   targetDate: string;
-}) =>
-  api("/goals", {
+}) {
+  await fetch("http://localhost:3030/api/goals", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
     body: JSON.stringify(data),
   });
-export const updateGoal = (
-  id: number,
-  data: {
-    title: string;
-    description?: string;
-    status?: string;
-    targetDate: string;
-  }
-) =>
-  api(`/goals/${id}`, {
+}
+
+export async function updateGoalStatus(id: number, status: string) {
+  await fetch(`http://localhost:3030/api/goals/${id}`, {
     method: "PATCH",
-    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+    body: JSON.stringify({ status }),
   });
-export const deleteGoal = (id: number) =>
-  api(`/goals/${id}`, { method: "DELETE" });
+}
