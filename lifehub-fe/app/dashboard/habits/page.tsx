@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { HabitCard } from "@/components/ui/HabitCard";
-import { HabitForm } from "@/components/ui/HabitForm";
+import { HabitCard } from "@/components/cards/HabitCard";
+import { HabitForm } from "@/components/forms/HabitForm";
 import { getHabits } from "@/lib/api";
 import { Habit } from "@/types";
 
 export default function HabitsPage() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [open, setOpen] = useState(false);
+
+  const fetchData = async () => {
+    const data = await getHabits();
+    setHabits(data);
+  };
 
   const fetchHabits = async () => {
     const data = await getHabits();
@@ -29,7 +34,7 @@ export default function HabitsPage() {
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {habits.map((habit) => (
-          <HabitCard key={habit.id} habit={habit} onUpdate={fetchHabits} />
+          <HabitCard habits={habits} onUpdate={fetchData} />
         ))}
       </div>
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TaskTable } from "@/components/ui/TaskTable";
-import { TaskForm } from "@/components/ui/TaskForm";
+import { TaskForm } from "@/components/forms/TaskForm";
 import { Task } from "@/types";
 import { getTasks } from "@/lib/api";
 

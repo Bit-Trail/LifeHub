@@ -8,6 +8,7 @@ export type Task = {
 };
 
 export type Habit = {
+  completed: any;
   id: number;
   title: string;
   emoji: string;
@@ -15,6 +16,7 @@ export type Habit = {
 };
 
 export type Journal = {
+  date: string | number | Date;
   id: number;
   content: string;
   createdAt: string;

@@ -29,6 +29,32 @@ async function api<T>(
   return response.json();
 }
 
+// Dashboard stats
+export async function getDashboardStats() {
+  const res = await fetch("http://localhost:3030/api/stats", {
+    headers: {
+      Authorization: `Bearer ${getAuthToken()}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Failed to fetch stats");
+
+  return res.json(); // { tasks: 4, habits: 2, goals: 1, journals: 5 }
+}
+
+// Dashboard preview
+export async function getDashboardPreview() {
+  const res = await fetch("http://localhost:3030/api/stats/preview", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Failed to load preview");
+
+  return res.json(); // { tasks: [], habits: [], journals: [], goals: [] }
+}
+
 //
 // 🔐 AUTH
 //
@@ -149,6 +175,23 @@ export async function createJournal(data: { content: string }) {
   });
 }
 
+export async function deleteJournal(id: number): Promise<void> {
+  const token = localStorage.getItem("authToken");
+  if (!token) throw new Error("Unauthorized");
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/journals/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Failed to delete journal");
+  }
+}
+
 //
 // ✅ GOALS
 //
@@ -186,3 +229,19 @@ export async function updateGoalStatus(id: number, status: string) {
     body: JSON.stringify({ status }),
   });
 }
+
+export const deleteGoal = async (id: number): Promise<void> => {
+  const token = localStorage.getItem("token"); // or wherever you store it
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/goals/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || "Failed to delete goal");
+  }
+};
