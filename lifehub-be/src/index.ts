@@ -6,6 +6,9 @@ import authRoutes from "./routes/auth.routes";
 import { authenticate } from "./middleware/auth.middleware";
 import taskRoutes from "./routes/task.routes";
 import habitRoutes from "./routes/habit.routes";
+import journalRoutes from "./routes/journal.routes";
+import goalRoutes from "./routes/goal.route";
+
 
 dotenv.config();
 const app = express();
@@ -15,6 +18,8 @@ app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/habits", habitRoutes);
+app.use("/api/journals", journalRoutes);
+app.use("/api/goals", goalRoutes);
 
 // 🔐 Sample protected route
 app.get("/api/protected", authenticate, (req, res) => {
