@@ -1,32 +1,23 @@
-import { ReactNode } from "react";
+"use client";
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+import { Sidebar } from "@/components/layout/sidebar";
+import { MainHeader } from "@/components/layout/mainheader";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 bg-gray-900 text-white p-6">
-        <h1 className="text-2xl font-bold mb-6">LifeHub</h1>
-        <nav className="space-y-4">
-          <a href="/dashboard" className="block">
-            Home
-          </a>
-          <a href="/dashboard/tasks" className="block">
-            Tasks
-          </a>
-          <a href="/dashboard/habits" className="block">
-            Habits
-          </a>
-          <a href="/dashboard/journal" className="block">
-            Journal
-          </a>
-          <a href="/dashboard/goals" className="block">
-            Goals
-          </a>
-          <a href="/dashboard/analytics" className="block">
-            Analytics
-          </a>
-        </nav>
-      </aside>
-      <main className="flex-1 bg-gray-100 p-6">{children}</main>
+    <div className="flex min-h-screen w-full bg-muted/40">
+      {/* Desktop Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col md:ml-64">
+        <MainHeader />
+        <main className="flex-1 p-4 md:p-6 lg:p-10">{children}</main>
+      </div>
     </div>
   );
 }

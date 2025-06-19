@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
 
+
+// Add tasks
 export const getTasks = async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
 
   try {
     const tasks = await prisma.task.findMany({
       where: { userId },
-      orderBy: { createdAt: "desc" },
+      orderBy: { dueDate: "asc" },
     });
     res.json(tasks);
   } catch (err) {
@@ -15,15 +17,19 @@ export const getTasks = async (req: Request, res: Response) => {
   }
 };
 
+// Create Task
 export const createTask = async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
-  const { title, date } = req.body;
+  const { title, category, dueDate, reminderAt } = req.body;
 
   try {
     const task = await prisma.task.create({
       data: {
         title,
         userId,
+        category,
+        dueDate: dueDate ? new Date(dueDate) : undefined,
+        reminderAt: reminderAt ? new Date(reminderAt) : undefined,
       },
     });
     res.status(201).json(task);
@@ -32,7 +38,8 @@ export const createTask = async (req: Request, res: Response) => {
   }
 };
 
-export const toggleTask = async (req: Request, res: Response): Promise<void> => {
+// Toggle Task
+export const toggleTask = async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
   const taskId = parseInt(req.params.id);
 
@@ -60,8 +67,43 @@ export const toggleTask = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
+// Update Task
+export const updateTask = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = (req as any).user.userId;
+  const { title, category, dueDate, reminderAt } = req.body;
 
-export const deleteTask = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const task = await prisma.task.findUnique({ where: { id: Number(id) } });
+
+    if (!task || task.userId !== userId) {
+       res.status(404).json({ error: "Task not found or unauthorized" });
+       return;
+    }
+
+    const updatedTask = await prisma.task.update({
+      where: { id: Number(id) },
+      data: {
+        ...(title && { title }),
+        ...(category && { category }),
+        ...(dueDate && { dueDate: new Date(dueDate) }),
+        ...(reminderAt && { reminderAt: new Date(reminderAt) }),
+        updatedAt: new Date(),
+      },
+    });
+
+     res.status(200).json(updatedTask);
+     return;
+  } catch (error) {
+    console.error("Update task error:", error);
+     res.status(500).json({ error: "Failed to update task" });
+     return;
+  }
+};
+
+
+// Delete Task
+export const deleteTask = async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
   const taskId = parseInt(req.params.id);
 

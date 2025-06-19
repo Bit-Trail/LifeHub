@@ -1,40 +1,62 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Goal } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { GoalForm } from "@/components/forms/GoalForm";
-import { GoalTable } from "@/components/ui/GoalTable";
+import { motion } from "framer-motion";
+import { Target, CheckCircle, Clock9 } from "lucide-react";
 
-interface Props {
+type Props = {
   goals: Goal[];
-  onUpdate: () => void;
-}
+};
 
-export function GoalCard({ goals, onUpdate }: Props) {
-  const [open, setOpen] = useState(false);
+export function GoalCard({ goals }: Props) {
+  const totalGoals = goals.length;
+  const completedGoals = goals.filter((g) => g.status === "Done").length;
+  const inProgressGoals = goals.filter(
+    (g) => g.status === "In Progress"
+  ).length;
+
+  const upcoming = goals
+    .filter((g) => new Date(g.targetDate) > new Date())
+    .sort(
+      (a, b) =>
+        new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime()
+    )[0];
+
+  const upcomingText = upcoming
+    ? `${upcoming.title} (${new Date(
+        upcoming.targetDate
+      ).toLocaleDateString()})`
+    : "—";
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="rounded-xl border border-zinc-200 bg-white p-5 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+      transition={{ duration: 0.6, delay: 0.2 }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-100">
-          🎯 Personal Goals
-        </h2>
-        <Button size="sm" onClick={() => setOpen(true)}>
-          <Plus className="w-4 h-4 mr-1" />
-          New Goal
-        </Button>
-      </div>
-
-      <GoalTable goals={goals} onUpdate={onUpdate} />
-      <GoalForm open={open} setOpen={setOpen} onSuccess={onUpdate} />
+      <Card className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white shadow-lg rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Target className="w-5 h-5" />
+            Goal Tracker
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3 text-sm">
+          <div>
+            Total Goals: <strong>{totalGoals}</strong>
+          </div>
+          <div>
+            Completed: <span className="font-semibold">{completedGoals}</span> /
+            In Progress:{" "}
+            <span className="font-semibold">{inProgressGoals}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Clock9 className="w-4 h-4" />
+            Upcoming Goal: <span className="font-medium">{upcomingText}</span>
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }

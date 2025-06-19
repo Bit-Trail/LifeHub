@@ -1,13 +1,20 @@
 import { ReactNode } from "react";
 
 export type Task = {
+  date: any;
   id: number;
   title: string;
-  completed: boolean; // ✅ match backend key
-  date?: string;      // optional if not used
+  category: "WORK" | "PERSONAL";
+  completed: boolean;
+  dueDate?: string;
+  reminderAt?: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
+
 export type Habit = {
+  frequency: any;
   completed: any;
   id: number;
   title: string;
@@ -16,6 +23,7 @@ export type Habit = {
 };
 
 export type Journal = {
+  title: ReactNode;
   date: string | number | Date;
   id: number;
   content: string;

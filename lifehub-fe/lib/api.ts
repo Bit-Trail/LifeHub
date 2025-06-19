@@ -4,6 +4,13 @@ import { Habit, Journal, Task, Goal } from "@/types";
 
 const BASE_URL = "http://localhost:3030/api";
 
+function getToken(): string | null {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("authToken");
+  }
+  return null;
+}
+
 // Shared request function
 async function api<T>(
   endpoint: string,
@@ -79,42 +86,64 @@ export const register = (data: {
 // ✅ TASKS
 //
 export async function getTasks(): Promise<Task[]> {
+  const token = getToken();
+  if (!token) throw new Error("Missing token");
+
   const res = await fetch("http://localhost:3030/api/tasks", {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      Authorization: `Bearer ${token}`,
     },
   });
-  const data = await res.json();
-  return data;
+
+  if (!res.ok) throw new Error("Failed to fetch tasks");
+  return await res.json();
 }
 
-export async function createTask(data: { title: string, date: string }) {
-  await fetch("http://localhost:3030/api/tasks", {
+export async function createTask(data: { title: string; date: string }) {
+  const token = getToken();
+  if (!token) throw new Error("Missing token");
+
+  const res = await fetch("http://localhost:3030/api/tasks", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ ...data, date: new Date().toISOString() }), // ✅ add date
+    body: JSON.stringify(data),
   });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Failed to create task");
+  }
 }
 
 export async function deleteTask(id: number) {
-  await fetch(`http://localhost:3030/api/tasks/${id}`, {
+  const token = getToken();
+  if (!token) throw new Error("Missing token");
+
+  const res = await fetch(`http://localhost:3030/api/tasks/${id}`, {
     method: "DELETE",
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
+
+  if (!res.ok) throw new Error("Failed to delete task");
 }
 
 export async function toggleTaskDone(id: number) {
-  await fetch(`http://localhost:3030/api/tasks/${id}/toggle`, {
+  const token = getToken();
+  if (!token) throw new Error("Missing token");
+
+  const res = await fetch(`http://localhost:3030/api/tasks/${id}/toggle`, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
+
+  if (!res.ok) throw new Error("Failed to toggle task");
 }
 
 //

@@ -17,17 +17,23 @@ model User {
   habits   Habit[]
   journals  Journal[]
   goals    Goal[]
+  googleRefreshToken String? @map("google_refresh_token")
+  googleAccessToken  String? @map("google_access_token")
 }
 
 model Task {
-  id        Int      @id @default(autoincrement())
-  title     String
-  date      DateTime @default(now())
-  completed Boolean  @default(false)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
-  createdAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  title      String
+  category   String   @default("Personal") // "Personal" | "Professional"
+  completed  Boolean  @default(false)
+  dueDate    DateTime?
+  reminderAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
 }
+
 
 model Habit {
   id        Int      @id @default(autoincrement())

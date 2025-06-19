@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { GoalForm } from "@/components/forms/GoalForm";
-import { GoalTable } from "@/components/ui/GoalTable";
 import { getGoals } from "@/lib/api";
 import { Goal } from "@/types";
 
@@ -28,7 +27,7 @@ export default function GoalPage() {
       </div>
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        <GoalTable goals={goals} onUpdate={fetchGoals} />
+        // Display Goals
       </div>
 
       <GoalForm open={open} setOpen={setOpen} onSuccess={fetchGoals} />

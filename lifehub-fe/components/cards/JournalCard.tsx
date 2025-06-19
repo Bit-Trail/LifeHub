@@ -1,39 +1,46 @@
 "use client";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Journal } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { useState } from "react";
-import { JournalForm } from "@/components/forms/JournalForm";
-import { JournalTable } from "@/components/ui/JournalTable";
 import { motion } from "framer-motion";
+import { BookOpenCheck, CalendarDays } from "lucide-react";
 
-interface Props {
+type Props = {
   journals: Journal[];
-  onUpdate: () => void;
-}
+};
 
-export function JournalCard({ journals, onUpdate }: Props) {
-  const [open, setOpen] = useState(false);
+export function JournalCard({ journals }: Props) {
+  const totalJournals = journals.length;
+
+  const latest = journals
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+
+  const latestDate = latest ? new Date(latest.date).toLocaleDateString() : "—";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      transition={{ duration: 0.6, delay: 0.15 }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-100">
-          📓 Daily Journal
-        </h2>
-        <Button size="sm" onClick={() => setOpen(true)}>
-          <Plus className="w-4 h-4 mr-1" /> New Entry
-        </Button>
-      </div>
-
-      <JournalTable journals={journals} onUpdate={onUpdate} />
-      <JournalForm open={open} setOpen={setOpen} onSuccess={onUpdate} />
+      <Card className="bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-lg rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <BookOpenCheck className="w-5 h-5" />
+            Journal Entries
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3 text-sm">
+          <div>
+            Total Written: <strong>{totalJournals}</strong>
+          </div>
+          <div className="flex items-center gap-1">
+            <CalendarDays className="w-4 h-4" />
+            Last Entry: <span className="font-semibold">{latestDate}</span>
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }
