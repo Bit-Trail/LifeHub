@@ -14,6 +14,7 @@ export type Task = {
 
 
 export type Habit = {
+  createdAt: string | number | Date;
   frequency: any;
   completed: any;
   id: number;
@@ -23,6 +24,7 @@ export type Habit = {
 };
 
 export type Journal = {
+  mood: any;
   title: ReactNode;
   date: string | number | Date;
   id: number;
@@ -31,6 +33,7 @@ export type Journal = {
 };
 
 export type Goal = {
+  createdAt: string | number | Date;
   description: ReactNode;
   targetDate: string | number | Date;
   id: number;

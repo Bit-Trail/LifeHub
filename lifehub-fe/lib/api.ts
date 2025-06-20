@@ -180,10 +180,26 @@ export async function toggleHabitDay(id: number, day: string) {
   });
 }
 
+// ✅ Delete a habit
+export async function deleteHabit(id: number): Promise<void> {
+  const token = localStorage.getItem("authToken");
+  if (!token) throw new Error("Unauthorized");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/habits/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Failed to delete habit");
+  }
+}
 
-//
+
 // ✅ JOURNALS
-//
+
+// Get all journals
 export async function getJournals(): Promise<Journal[]> {
   const res = await fetch("http://localhost:3030/api/journals", {
     headers: {
@@ -193,8 +209,9 @@ export async function getJournals(): Promise<Journal[]> {
   return res.json();
 }
 
-export async function createJournal(data: { content: string }) {
-  await fetch("http://localhost:3030/api/journals", {
+// Create a new journal entry
+export async function createJournal(data: { title: string; content: string; mood: string }) {
+  await fetch("http://localhost:3030/api/journals/createJournal", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -204,11 +221,12 @@ export async function createJournal(data: { content: string }) {
   });
 }
 
+// Delete a journal entry
 export async function deleteJournal(id: number): Promise<void> {
   const token = localStorage.getItem("authToken");
   if (!token) throw new Error("Unauthorized");
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/journals/${id}`, {
+  const res = await fetch(`http://localhost:3030/api/journals/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -274,3 +292,19 @@ export const deleteGoal = async (id: number): Promise<void> => {
     throw new Error(errorData.error || "Failed to delete goal");
   }
 };
+
+
+// AI INSIGHTS
+export async function getInsights(message?: string) {
+  const res = await fetch("http://localhost:3030/api/ai-insights", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+    body: JSON.stringify({ message }),
+  });
+
+  const data = await res.json();
+  return data;
+}

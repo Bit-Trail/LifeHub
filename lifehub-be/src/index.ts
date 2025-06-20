@@ -10,12 +10,14 @@ import habitRoutes from "./routes/habit.routes";
 import journalRoutes from "./routes/journal.routes";
 import goalRoutes from "./routes/goal.route";
 import googleRoutes from "./routes/google.route";
+import aiRoutes from "./routes/ai.route";
 
 
 dotenv.config();
 const app = express();
 
 app.use(cors());
+app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/tasks", taskRoutes);
@@ -23,6 +25,7 @@ app.use("/api/habits", habitRoutes);
 app.use("/api/journals", journalRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/google", googleRoutes);
+app.use("/api", aiRoutes);
 
 
 // 🔐 Sample protected route

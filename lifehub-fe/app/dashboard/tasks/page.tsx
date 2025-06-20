@@ -172,7 +172,7 @@ export default function TaskPage() {
             view={view}
           />
           <CategoryGroup
-            title="🔴 Due / Overdue"
+            title="🔴 Due"
             tasks={due}
             onUpdate={fetchTasks}
             view={view}
@@ -193,7 +193,7 @@ export default function TaskPage() {
             view={view}
           />
           <CategoryGroup
-            title="🔴 Due / Overdue"
+            title="🔴 Due"
             tasks={due}
             onUpdate={fetchTasks}
             view={view}

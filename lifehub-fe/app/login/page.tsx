@@ -4,15 +4,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async () => {
     setError("");
+    setLoading(true);
     try {
       const res = await fetch("http://localhost:3030/api/auth/login", {
         method: "POST",
@@ -21,16 +24,17 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
+      setLoading(false);
 
       if (!res.ok) {
         setError(data.message || "Login failed");
         return;
       }
 
-      const token = data.token;
-      localStorage.setItem("authToken", token);
+      localStorage.setItem("authToken", data.token);
       router.push("/dashboard");
     } catch {
+      setLoading(false);
       setError("Something went wrong.");
     }
   };
@@ -40,32 +44,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-black text-white">
-      {/* Left Panel - Illustration + Tagline */}
-      <div className="md:w-1/2 bg-gradient-to-br from-purple-600 to-indigo-800 flex flex-col justify-center items-center p-10 text-center">
-        <img
-          src="/login-hero.png"
-          alt="LifeHub Illustration"
-          className="w-2/3 max-w-sm mb-6 animate-fade-in drop-shadow-xl"
-        />
-        <h1 className="text-3xl md:text-4xl font-bold mb-2 animate-slide-in">
-          Welcome to LifeHub
-        </h1>
-        <p className="text-lg text-white/80 max-w-md animate-fade-in delay-200">
-          Your all-in-one productivity companion — track habits, log tasks,
-          write journals, and grow with clarity.
-        </p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-800 via-purple-800 to-fuchsia-900 px-4 py-10">
+      <div className="absolute top-0 left-0 w-full h-full bg-[url('/lifehub-hero.jpg')] bg-cover bg-center opacity-10 z-0" />
 
-      {/* Right Panel - Login Form */}
-      <div className="md:w-1/2 flex items-center justify-center p-8 bg-slate-900 animate-fade-in-up">
-        <div className="w-full max-w-md space-y-6">
-          <h2 className="text-2xl font-semibold text-center">
-            Sign in to your LifeHub
-          </h2>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl w-full max-w-md p-8 text-white"
+      >
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold">Login to LifeHub</h1>
+          <p className="text-white/70 text-sm">
+            Your personal productivity OS.
+          </p>
+        </div>
 
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {error && (
+          <p className="text-sm text-red-400 text-center border border-red-400 bg-red-500/10 px-3 py-2 rounded mb-4">
+            {error}
+          </p>
+        )}
 
+        <div className="space-y-4">
           <Input
             placeholder="Email"
             value={email}
@@ -79,22 +80,25 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyPress}
           />
-
-          <Button className="w-full" onClick={handleLogin}>
-            Sign In
+          <Button
+            onClick={handleLogin}
+            className="w-full font-medium"
+            disabled={loading}
+          >
+            {loading ? "Signing in..." : "Sign In"}
           </Button>
-
-          <p className="text-center text-sm text-white/60">
-            Don't have an account?{" "}
-            <a
-              href="/register"
-              className="text-indigo-400 underline hover:text-indigo-300"
-            >
-              Register
-            </a>
-          </p>
         </div>
-      </div>
+
+        <p className="text-center text-sm text-white/60 mt-4">
+          Don't have an account?{" "}
+          <a
+            href="/register"
+            className="text-indigo-300 underline hover:text-indigo-200"
+          >
+            Register
+          </a>
+        </p>
+      </motion.div>
     </div>
   );
 }

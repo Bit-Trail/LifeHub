@@ -13,7 +13,7 @@ router.use(authenticate);
 
 router.post("/",  createGoal  as RequestHandler);
 router.get("/",   getGoals    as RequestHandler);
-router.put("/:id",updateGoal  as RequestHandler);
+router.patch("/:id", updateGoal as RequestHandler);
 router.delete("/:id", deleteGoal as RequestHandler);
 
 export default router;

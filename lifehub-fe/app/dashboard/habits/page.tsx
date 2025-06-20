@@ -1,24 +1,57 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { HabitCard } from "@/components/cards/HabitCard";
-import { HabitForm } from "@/components/forms/HabitForm";
-import { getHabits } from "@/lib/api";
 import { Habit } from "@/types";
+import { getAuthToken } from "@/lib/utils";
+import { toast } from "sonner";
+import { HabitForm } from "@/components/habits/HabitForm";
+import { HabitList } from "@/components/habits/HabitList";
 
-export default function HabitsPage() {
+export default function HabitPage() {
   const [habits, setHabits] = useState<Habit[]>([]);
-  const [open, setOpen] = useState(false);
-
-  const fetchData = async () => {
-    const data = await getHabits();
-    setHabits(data);
-  };
 
   const fetchHabits = async () => {
-    const data = await getHabits();
-    setHabits(data);
+    try {
+      const res = await fetch("http://localhost:3030/api/habits", {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to fetch habits");
+      const data = await res.json();
+      setHabits(data);
+    } catch (err) {
+      toast.error("Error loading habits");
+    }
+  };
+
+  const deleteHabit = async (id: number) => {
+    try {
+      await fetch(`http://localhost:3030/api/habits/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      toast.success("Habit deleted");
+      fetchHabits();
+    } catch (err) {
+      toast.error("Failed to delete habit");
+    }
+  };
+
+  const toggleHabitDay = async (id: number, day: string) => {
+    try {
+      await fetch(`http://localhost:3030/api/habits/${id}/toggle/${day}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      fetchHabits();
+    } catch (err) {
+      toast.error("Failed to toggle habit day");
+    }
   };
 
   useEffect(() => {
@@ -26,19 +59,25 @@ export default function HabitsPage() {
   }, []);
 
   return (
-    <div className="p-4 space-y-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Your Habits</h1>
-        <Button onClick={() => setOpen(true)}>+ Add Habit</Button>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold">🧠 Habits</h2>
+        <HabitForm onCreate={fetchHabits} />
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {habits.map((habit) => (
-          <HabitCard habits={habits} onUpdate={fetchData} />
-        ))}
-      </div>
-
-      <HabitForm open={open} setOpen={setOpen} onSuccess={fetchHabits} />
+      {habits.length === 0 ? (
+        <p className="text-muted-foreground text-sm">
+          No habits found. Start by adding one!
+        </p>
+      ) : (
+        <HabitList
+          habits={habits}
+          onDelete={deleteHabit}
+          onToggle={toggleHabitDay}
+          onUpdate={fetchHabits}
+          showStreakDetails={true}
+        />
+      )}
     </div>
   );
 }
