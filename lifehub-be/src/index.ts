@@ -11,7 +11,7 @@ import journalRoutes from "./routes/journal.routes";
 import goalRoutes from "./routes/goal.route";
 import googleRoutes from "./routes/google.route";
 import aiRoutes from "./routes/ai.route";
-
+import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
 
 dotenv.config();
 const app = express();
@@ -27,11 +27,11 @@ app.use("/api/goals", goalRoutes);
 app.use("/api/google", googleRoutes);
 app.use("/api", aiRoutes);
 
+// 404 handler
+app.use(notFoundHandler);
 
-// 🔐 Sample protected route
-app.get("/api/protected", authenticate, (req, res) => {
-  res.json({ message: "You are authenticated!", user: (req as any).user });
-});
+// Global error handler (last middleware)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3030;
 app.listen(PORT, () => {

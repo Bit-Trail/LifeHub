@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { prisma } from "../prisma";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { getParam } from "../utils/param";
 
 // ➕ Create a journal entry
 export const createJournal = async (req: AuthRequest, res: Response) => {
@@ -46,7 +47,7 @@ export const getJournals = async (req: AuthRequest, res: Response) => {
 export const updateJournal = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
-    const journalId = Number(req.params.id);
+    const journalId = Number(getParam(req, "id"));
     const { title, content, mood } = req.body;
 
     const journal = await prisma.journal.findUnique({ where: { id: journalId } });
@@ -70,7 +71,7 @@ export const updateJournal = async (req: AuthRequest, res: Response) => {
 export const deleteJournal = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
-    const journalId = Number(req.params.id);
+    const journalId = Number(getParam(req, "id"));
 
     const journal = await prisma.journal.findUnique({ where: { id: journalId } });
 

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
+import { getParam } from "../utils/param";
 
 
 // Add tasks
@@ -41,7 +42,7 @@ export const createTask = async (req: Request, res: Response) => {
 // Toggle Task
 export const toggleTask = async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
-  const taskId = parseInt(req.params.id);
+  const taskId = parseInt(getParam(req, "id"));
 
   try {
     const task = await prisma.task.findUnique({ where: { id: taskId } });
@@ -69,7 +70,7 @@ export const toggleTask = async (req: Request, res: Response) => {
 
 // Update Task
 export const updateTask = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = getParam(req, "id");
   const userId = (req as any).user.userId;
   const { title, category, dueDate, reminderAt } = req.body;
 
@@ -105,7 +106,7 @@ export const updateTask = async (req: Request, res: Response) => {
 // Delete Task
 export const deleteTask = async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
-  const taskId = parseInt(req.params.id);
+  const taskId = parseInt(getParam(req, "id"));
 
   try {
     const task = await prisma.task.findUnique({ where: { id: taskId } });

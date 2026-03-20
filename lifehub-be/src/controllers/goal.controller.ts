@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { getParam } from "../utils/param";
 
 // 📌 Create Goal
 export const createGoal = async (req: AuthRequest, res: Response) => {
@@ -47,7 +48,7 @@ export const getGoals = async (req: AuthRequest, res: Response) => {
 // 📌 Update Goal
 export const updateGoal = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.userId;
-  const goalId = Number(req.params.id);
+  const goalId = Number(getParam(req, "id"));
   const { title, description, status, targetDate } = req.body;
 
   try {
@@ -77,7 +78,7 @@ export const updateGoal = async (req: AuthRequest, res: Response) => {
 // 📌 Delete Goal
 export const deleteGoal = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.userId;
-  const goalId = Number(req.params.id);
+  const goalId = Number(getParam(req, "id"));
 
   try {
     const goal = await prisma.goal.findUnique({ where: { id: goalId } });

@@ -1,25 +1,24 @@
 import { Request, Response } from "express";
-import { google } from "googleapis";
+import { google, Auth } from "googleapis";
 import dotenv from "dotenv";
 import { prisma } from "../prisma";
 
 dotenv.config();
 
-const {
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  GOOGLE_REDIRECT_URI,
-} = process.env as Record<string, string>;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI;
 
-if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_REDIRECT_URI) {
-  throw new Error("Google OAuth env vars missing. Check .env file");
-}
+const hasGoogleOAuth =
+  !!GOOGLE_CLIENT_ID && !!GOOGLE_CLIENT_SECRET && !!GOOGLE_REDIRECT_URI;
 
-const oauth2Client = new google.auth.OAuth2(
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  GOOGLE_REDIRECT_URI
-);
+const oauth2Client: Auth.OAuth2Client | null = hasGoogleOAuth
+  ? new google.auth.OAuth2(
+      GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET,
+      GOOGLE_REDIRECT_URI
+    )
+  : null;
 
 // Scopes for Calendar and Tasks
 const SCOPES = [
@@ -32,6 +31,12 @@ const SCOPES = [
  * Redirect user to Google consent screen
  */
 export const authorizeGoogle = async (req: Request, res: Response) => {
+  if (!oauth2Client) {
+    res.status(503).json({
+      error: "Google OAuth not configured. Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI to .env",
+    });
+    return;
+  }
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
@@ -45,6 +50,12 @@ export const authorizeGoogle = async (req: Request, res: Response) => {
  * Exchange code for tokens and save refresh token for the user
  */
 export const googleCallback = async (req: Request, res: Response) => {
+  if (!oauth2Client) {
+    res.status(503).json({
+      error: "Google OAuth not configured. Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI to .env",
+    });
+    return;
+  }
   const { code } = req.query;
   const userId = (req as any).user.userId; // expects auth middleware
 
@@ -74,7 +85,8 @@ export const googleCallback = async (req: Request, res: Response) => {
 /**
  * Helper: set client credentials for a user id
  */
-const setCredentialsForUser = async (userId: number) => {
+const setCredentialsForUser = async (userId: number): Promise<void> => {
+  if (!oauth2Client) throw new Error("Google OAuth not configured");
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user?.googleRefreshToken) throw new Error("No Google account linked");
   oauth2Client.setCredentials({ refresh_token: user.googleRefreshToken });
@@ -86,6 +98,12 @@ const setCredentialsForUser = async (userId: number) => {
  * Creates both a Google Task and Calendar event
  */
 export const createTaskOnGoogle = async (req: Request, res: Response) => {
+  if (!oauth2Client) {
+    res.status(503).json({
+      error: "Google OAuth not configured. Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI to .env",
+    });
+    return;
+  }
   const userId = (req as any).user.userId;
   const { title, dueDate, reminderAt } = req.body as {
     title: string;

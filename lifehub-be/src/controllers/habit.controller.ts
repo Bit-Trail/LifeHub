@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { getParam } from "../utils/param";
 
 // ➕ Create a new habit
 export const createHabit = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -48,8 +49,8 @@ export const getHabits = async (req: AuthRequest, res: Response): Promise<void> 
 // ✅ Toggle habit completion
 export const toggleHabitDay = async (req: Request, res: Response)=> {
   const userId = (req as any).user.userId;
-  const habitId = parseInt(req.params.id);
-  const day = req.params.day; // Mon, Tue, etc.
+  const habitId = parseInt(getParam(req, "id"));
+  const day = getParam(req, "day"); // Mon, Tue, etc.
 
   try {
     const habit = await prisma.habit.findUnique({ where: { id: habitId } });
@@ -78,7 +79,7 @@ export const toggleHabitDay = async (req: Request, res: Response)=> {
 // ❌ Delete a habit
 export const deleteHabit = async (req: AuthRequest, res: Response): Promise<void> => {
   const userId = req.user?.userId;
-  const habitId = parseInt(req.params.id);
+  const habitId = parseInt(getParam(req, "id"));
 
   const habit = await prisma.habit.findUnique({ where: { id: habitId } });
 

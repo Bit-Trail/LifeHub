@@ -1,0 +1,463 @@
+{
+  "info": {
+    "name": "LifeHub API",
+    "_postman_id": "b4a4b4d0-0000-0000-0000-lifehub",
+    "description": "Postman collection for LifeHub backend (auth, tasks, habits, journals, goals, AI, Google).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "Get Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"]
+            }
+          }
+        },
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sample Task\",\n  \"category\": \"Personal\",\n  \"dueDate\": \"2026-03-20T00:00:00.000Z\",\n  \"reminderAt\": \"2026-03-19T18:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Task",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/:id/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", ":id", "toggle"]
+            }
+          }
+        },
+        {
+          "name": "Update Task",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Task Title\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tasks", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Habits",
+      "item": [
+        {
+          "name": "Get Habits",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/habits",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "habits"]
+            }
+          }
+        },
+        {
+          "name": "Create Habit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Drink Water\",\n  \"frequency\": \"daily\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/habits",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "habits"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Habit Day",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/habits/:id/toggle/:day",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "habits", ":id", "toggle", ":day"]
+            }
+          }
+        },
+        {
+          "name": "Delete Habit",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/habits/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "habits", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Journals",
+      "item": [
+        {
+          "name": "Get Journals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/journals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journals"]
+            }
+          }
+        },
+        {
+          "name": "Create Journal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My Day\",\n  \"content\": \"Today was great!\",\n  \"mood\": \"happy\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/journals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journals"]
+            }
+          }
+        },
+        {
+          "name": "Update Journal",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Title\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/journals/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journals", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Journal",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/journals/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "journals", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Goals",
+      "item": [
+        {
+          "name": "Get Goals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/goals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals"]
+            }
+          }
+        },
+        {
+          "name": "Create Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Learn TypeScript\",\n  \"description\": \"Finish a TS course\",\n  \"targetDate\": \"2026-04-01T00:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/goals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals"]
+            }
+          }
+        },
+        {
+          "name": "Update Goal",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"In Progress\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/goals/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Goal",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/goals/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "goals", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Insights",
+      "item": [
+        {
+          "name": "Get Insights",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"How am I doing this week?\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ai-insights",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ai-insights"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3030"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
+
